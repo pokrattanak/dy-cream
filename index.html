@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <title>DY CREAM - Fixed 1 Page Print</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; background-color: #f4f7f6; -webkit-print-color-adjust: exact; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border-top: 8px solid #27ae60; }
+        .seller-group { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; background: #eef9f3; padding: 10px; border-radius: 12px; }
+        .seller-option { font-size: 14px; font-weight: bold; display: flex; align-items: center; cursor: pointer; }
+        .seller-option input { margin-right: 5px; width: 18px; height: 18px; }
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1.5px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        .btn-main { width: 100%; padding: 15px; background: linear-gradient(135deg, #27ae60, #2980b9); color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; }
+        .btn-excel { width: 100%; padding: 10px; color: white; border: none; border-radius: 10px; font-size: 14px; margin-top: 10px; cursor: pointer; }
+
+        #receipt { 
+            display: none; 
+            width: 90mm; 
+            height: 128mm; 
+            background: #fff !important; 
+            padding: 5mm; 
+            box-sizing: border-box; 
+            border: 3px solid #27ae60 !important;
+            overflow: hidden; 
+            page-break-after: avoid; 
+        }
+        .receipt-header { text-align: center; border-bottom: 2px solid #2980b9; padding-bottom: 5px; margin-bottom: 10px; }
+        .info-row { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 5px; }
+        .premium-box { border: 1px solid #ddd; margin: 5px 0; padding: 8px; border-radius: 8px; border-left: 5px solid #27ae60; background: #f9fdfb !important; }
+        .label { font-size: 10px; font-weight: bold; color: #2980b9 !important; }
+        .value { font-size: 16px; font-weight: 800; }
+        .price-tag { text-align: right; font-size: 26px; font-weight: 900; color: #27ae60 !important; margin: 5px 0; }
+        .note-box { border: 1px solid #eee; padding: 8px; height: 25mm; font-size: 12px; background: #fdfdfd !important; overflow: hidden; }
+
+        @media print {
+            @page { size: 90mm 130mm; margin: 0; }
+            html, body { height: 100%; overflow: hidden; margin: 0; padding: 0; } 
+            .no-print { display: none !important; }
+            #receipt { display: block !important; margin: 0 auto; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container no-print">
+    <h2 style="text-align:center; color:#27ae60;">DY CREAM BRAND</h2>
+    
+    <div class="seller-group">
+        <label class="seller-option"><input type="radio" name="seller" value="Lymeng" checked> Lymeng</label>
+        <label class="seller-option"><input type="radio" name="seller" value="Lyhour"> Lyhour</label>
+        <label class="seller-option"><input type="radio" name="seller" value="Fongsy"> Fongsy</label>
+    </div>
+
+    <input type="tel" id="phone" placeholder="លេខទូរស័ព្ទ">
+    <input type="text" id="loc" placeholder="ទីតាំង">
+    <input type="number" id="price" placeholder="តម្លៃ ($)">
+    <textarea id="note" rows="3" placeholder="ចំណាំ..."></textarea>
+    
+    <button class="btn-main" onclick="oneClickPrint()">Save & Print</button>
+    
+    <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px;">
+        <button class="btn-excel" style="background-color: #27ae60;" onclick="exportIndividualExcel('Lymeng')">Excel Lymeng</button>
+        <button class="btn-excel" style="background-color: #2980b9;" onclick="exportIndividualExcel('Lyhour')">Excel Lyhour</button>
+        <button class="btn-excel" style="background-color: #8e44ad;" onclick="exportIndividualExcel('Fongsy')">Excel Fongsy</button>
+    </div>
+</div>
+
+<div id="receipt">
+    <div class="receipt-header">
+        <div style="font-size: 22px; font-weight: 900; color: #27ae60 !important;">DY CREAM BRAND</div>
+        <div style="color: #2980b9; font-weight: bold; font-size: 14px;">Tel: 086 882636</div>
+    </div>
+    <div class="info-row">
+        <span id="r-date">DATE: --/--/----</span>
+        <span id="r-time">TIME: --:--</span>
+    </div>
+    <div class="info-row">
+        <span id="r-id">INV: #0000</span>
+        <span id="r-seller" style="color: #27ae60;">SELLER: ---</span>
+    </div>
+    <div class="premium-box">
+        <span class="label">Phone</span><br>
+        <span class="value" id="print-phone"></span>
+    </div>
+    <div class="premium-box" style="border-left-color: #2980b9;">
+        <span class="label">Location</span><br>
+        <span class="value" id="print-loc" style="font-size: 14px;"></span>
+    </div>
+    <div class="price-tag">
+        <span style="font-size: 14px; color: #7f8c8d;">TOTAL:</span> $<span id="print-price"></span>
+    </div>
+    <div class="note-box" id="print-note"></div>
+    <div style="text-align: center; font-size: 10px; margin-top: 5px; color: #888;">~~~ Thank You ~~~</div>
+</div>
+
+<script>
+    // បំពេញព័ត៌មានដែលអ្នកបានផ្ដល់ឱ្យរួចជាស្រេច
+    const TELEGRAM_TOKEN = '8550988878:AAE8pkMzHJ87tbJZClJ4KkA8CfKtZVtPISo'; 
+    const TELEGRAM_CHAT_ID = '557314967'; 
+
+    async function sendToTelegram(orderData) {
+        const message = `🔔 *ការបញ្ជាទិញថ្មី (DY CREAM)*\n━━━━━━━━━━━━━━\n🆔 លេខវិក្កយបត្រ: #${orderData.id}\n👤 អ្នកលក់: ${orderData.seller}\n📞 លេខទូរស័ព្ទ: ${orderData.phone}\n📍 ទីតាំង: ${orderData.loc}\n💵 តម្លៃសរុប: $${orderData.price}\n📝 ចំណាំ: ${orderData.note || 'គ្មាន'}\n⏰ ម៉ោង: ${orderData.time} | ${orderData.date}`;
+        
+        try {
+            await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
+            });
+        } catch (e) {
+            console.error("Telegram Error:", e);
+        }
+    }
+
+    function exportIndividualExcel(sellerName) {
+        const allOrders = JSON.parse(localStorage.getItem('dy_orders')) || [];
+        const filteredData = allOrders.filter(o => o.seller === sellerName);
+        if (filteredData.length === 0) return alert("No data for " + sellerName);
+
+        let total = 0;
+        let table = `<table border="1"><tr style="background:#27ae60;color:white;"><th>Date</th><th>Time</th><th>ID</th><th>Phone</th><th>Loc</th><th>Price</th></tr>`;
+        
+        filteredData.forEach(o => {
+            const p = parseFloat(o.price) || 0; total += p;
+            table += `<tr><td>${o.date}</td><td>${o.time}</td><td>${o.id}</td><td>${o.phone}</td><td>${o.loc}</td><td>${p}</td></tr>`;
+        });
+        
+        table += `<tr style="background:#eee;"><td colspan="5" align="right">TOTAL:</td><td>$${total.toFixed(2)}</td></tr></table>`;
+        
+        // ជួសជុលអក្សរខ្មែរឱ្យបង្ហាញត្រឹមត្រូវក្នុង Excel
+        const blob = new Blob(["\ufeff", table], { type: "application/vnd.ms-excel;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `Report_${sellerName}.xls`;
+        a.click();
+    }
+
+    function oneClickPrint() {
+        const phone = document.getElementById('phone').value;
+        const seller = document.querySelector('input[name="seller"]:checked').value;
+        if(!phone) return alert("សូមបញ្ចូលលេខទូរស័ព្ទ!");
+
+        const now = new Date();
+        const orderData = {
+            id: 'DY' + Math.floor(Math.random() * 9999),
+            seller: seller,
+            phone: phone,
+            loc: document.getElementById('loc').value,
+            price: document.getElementById('price').value,
+            note: document.getElementById('note').value,
+            date: now.toLocaleDateString(),
+            time: now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0')
+        };
+
+        let orders = JSON.parse(localStorage.getItem('dy_orders')) || [];
+        orders.push(orderData);
+        localStorage.setItem('dy_orders', JSON.stringify(orders));
+
+        // ផ្ញើទៅ Telegram ភ្លាមៗ
+        sendToTelegram(orderData);
+
+        document.getElementById('r-id').innerText = 'INV: #' + orderData.id;
+        document.getElementById('r-date').innerText = 'DATE: ' + orderData.date;
+        document.getElementById('r-time').innerText = 'TIME: ' + orderData.time;
+        document.getElementById('r-seller').innerText = 'SELLER: ' + orderData.seller;
+        document.getElementById('print-phone').innerText = orderData.phone;
+        document.getElementById('print-loc').innerText = orderData.loc;
+        document.getElementById('print-price').innerText = orderData.price;
+        document.getElementById('print-note').innerText = orderData.note;
+
+        document.getElementById('receipt').style.display = 'block';
+        setTimeout(() => { window.print(); }, 200);
+    }
+</script>
+</body>
+</html>
