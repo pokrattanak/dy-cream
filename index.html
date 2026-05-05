@@ -1,50 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="km">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <title>DY CREAM - Fixed 1 Page Print</title>
+    <title>DY CREAM - POS Full Fixed</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; background-color: #f4f7f6; -webkit-print-color-adjust: exact; }
-        .container { max-width: 500px; margin: auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); border-top: 8px solid #27ae60; }
-        .seller-group { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; background: #eef9f3; padding: 10px; border-radius: 12px; }
-        .seller-option { font-size: 14px; font-weight: bold; display: flex; align-items: center; cursor: pointer; }
-        .seller-option input { margin-right: 5px; width: 18px; height: 18px; }
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1.5px solid #ddd; border-radius: 10px; box-sizing: border-box; }
-        .btn-main { width: 100%; padding: 15px; background: linear-gradient(135deg, #27ae60, #2980b9); color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; }
-        .btn-excel { width: 100%; padding: 10px; color: white; border: none; border-radius: 10px; font-size: 14px; margin-top: 10px; cursor: pointer; }
-
-        #receipt { 
-            display: none; 
-            width: 90mm; 
-            height: 128mm; 
-            background: #fff !important; 
-            padding: 5mm; 
-            box-sizing: border-box; 
-            border: 3px solid #27ae60 !important;
-            overflow: hidden; 
-            page-break-after: avoid; 
+        :root {
+            --primary: #27ae60;
+            --secondary: #2980b9;
+            --bg: #f4f7f6;
         }
-        .receipt-header { text-align: center; border-bottom: 2px solid #2980b9; padding-bottom: 5px; margin-bottom: 10px; }
-        .info-row { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 5px; }
-        .premium-box { border: 1px solid #ddd; margin: 5px 0; padding: 8px; border-radius: 8px; border-left: 5px solid #27ae60; background: #f9fdfb !important; }
-        .label { font-size: 10px; font-weight: bold; color: #2980b9 !important; }
-        .value { font-size: 16px; font-weight: 800; }
-        .price-tag { text-align: right; font-size: 26px; font-weight: 900; color: #27ae60 !important; margin: 5px 0; }
-        .note-box { border: 1px solid #eee; padding: 8px; height: 25mm; font-size: 12px; background: #fdfdfd !important; overflow: hidden; }
+        body { font-family: 'Segoe UI', 'Kantumruy Pro', sans-serif; margin: 0; padding: 15px; background-color: var(--bg); -webkit-print-color-adjust: exact; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 8px solid var(--primary); }
+        
+        .seller-group { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; background: #eef9f3; padding: 10px; border-radius: 12px; }
+        .seller-option { font-size: 14px; font-weight: bold; display: flex; align-items: center; cursor: pointer; color: #333; }
+        .seller-option input { margin-right: 5px; width: 18px; height: 18px; cursor: pointer; }
+        
+        .cod-toggle-area { display: flex; align-items: center; background: #fff5f5; border: 1.5px solid #e74c3c; padding: 12px; border-radius: 10px; margin: 10px 0; cursor: pointer; }
+        .cod-toggle-area input { width: 22px; height: 22px; margin-right: 10px; cursor: pointer; }
+        .cod-toggle-area span { font-weight: bold; color: #e74c3c; font-size: 16px; }
 
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1.5px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
+        
+        .btn-main { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        
+        .excel-box { margin-top: 25px; border-top: 2px solid #eee; padding-top: 15px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        .btn-excel { padding: 10px 5px; color: white; border: none; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
+
+        /* Receipt */
+        #receipt { display: none; width: 80mm; background: #fff !important; padding: 5mm; box-sizing: border-box; }
+        .receipt-header { text-align: center; border-bottom: 2px dashed #ddd; padding-bottom: 10px; margin-bottom: 10px; }
+        .brand-name { font-size: 22px; font-weight: 900; color: var(--primary) !important; }
+        .brand-tel { font-size: 18px; font-weight: 800; color: #333 !important; background: #f0f0f0; display: inline-block; padding: 2px 10px; border-radius: 5px; margin-top: 4px; }
+        
+        .info-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; }
+        .premium-box { border: 1.2px solid #ddd; margin: 6px 0; padding: 8px; border-radius: 6px; }
+        .label { font-size: 10px; font-weight: bold; color: var(--secondary) !important; text-transform: uppercase; }
+        .value { font-size: 15px; font-weight: bold; }
+
+        #cod_display { display: none; text-align: center; border: 3px solid #e74c3c; margin: 10px 0; padding: 5px; border-radius: 8px; }
+        #cod_display span { font-size: 35px; font-weight: 900; color: #e74c3c !important; letter-spacing: 8px; }
+
+        .price-container { margin: 10px 0; text-align: right; }
+        .price-tag { font-size: 26px; font-weight: 900; color: var(--primary) !important; }
+        .price-riel { font-size: 18px; font-weight: bold; color: #444 !important; }
+        
         @media print {
-            @page { size: 90mm 130mm; margin: 0; }
-            html, body { height: 100%; overflow: hidden; margin: 0; padding: 0; } 
+            @page { size: 80mm auto; margin: 0; }
             .no-print { display: none !important; }
-            #receipt { display: block !important; margin: 0 auto; }
+            #receipt { display: block !important; width: 100%; border: none !important; }
         }
     </style>
 </head>
 <body>
 
 <div class="container no-print">
-    <h2 style="text-align:center; color:#27ae60;">DY CREAM BRAND</h2>
+    <h2 style="text-align:center; color:var(--primary); margin-top: 0;">DY CREAM BRAND</h2>
     
     <div class="seller-group">
         <label class="seller-option"><input type="radio" name="seller" value="Lymeng" checked> Lymeng</label>
@@ -52,14 +64,20 @@
         <label class="seller-option"><input type="radio" name="seller" value="Fongsy"> Fongsy</label>
     </div>
 
-    <input type="tel" id="phone" placeholder="លេខទូរស័ព្ទ">
-    <input type="text" id="loc" placeholder="ទីតាំង">
-    <input type="number" id="price" placeholder="តម្លៃ ($)">
-    <textarea id="note" rows="3" placeholder="ចំណាំ..."></textarea>
+    <input type="text" id="phone" placeholder="លេខទូរស័ព្ទ (Phone)">
     
-    <button class="btn-main" onclick="oneClickPrint()">Save & Print</button>
+    <label class="cod-toggle-area">
+        <input type="checkbox" id="cod_check">
+        <span>បើកប្រើ COD (បង្ហាញលើវិក្កយបត្រ)</span>
+    </label>
+
+    <input type="text" id="loc" placeholder="ទីតាំង (Location)">
+    <input type="text" id="price" placeholder="តម្លៃសរុប (Price $)">
+    <textarea id="note" rows="2" placeholder="ចំណាំបន្ថែម (Note...)"></textarea>
     
-    <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px;">
+    <button class="btn-main" onclick="oneClickPrint()">រក្សាទុក និង បោះពុម្ព</button>
+
+    <div class="excel-box">
         <button class="btn-excel" style="background-color: #27ae60;" onclick="exportIndividualExcel('Lymeng')">Excel Lymeng</button>
         <button class="btn-excel" style="background-color: #2980b9;" onclick="exportIndividualExcel('Lyhour')">Excel Lyhour</button>
         <button class="btn-excel" style="background-color: #8e44ad;" onclick="exportIndividualExcel('Fongsy')">Excel Fongsy</button>
@@ -68,71 +86,81 @@
 
 <div id="receipt">
     <div class="receipt-header">
-        <div style="font-size: 22px; font-weight: 900; color: #27ae60 !important;">DY CREAM BRAND</div>
-        <div style="color: #2980b9; font-weight: bold; font-size: 14px;">Tel: 086 882636</div>
+        <div class="brand-name">DY CREAM BRAND</div>
+        <div class="brand-tel">086 882636</div>
     </div>
+    
     <div class="info-row">
         <span id="r-date">DATE: --/--/----</span>
         <span id="r-time">TIME: --:--</span>
     </div>
     <div class="info-row">
         <span id="r-id">INV: #0000</span>
-        <span id="r-seller" style="color: #27ae60;">SELLER: ---</span>
+        <span id="r-seller" style="font-weight: bold;">SELLER: ---</span>
     </div>
+    <hr style="border: 0.5px solid #eee;">
+    
     <div class="premium-box">
-        <span class="label">Phone</span><br>
+        <span class="label">Phone</span>
         <span class="value" id="print-phone"></span>
     </div>
-    <div class="premium-box" style="border-left-color: #2980b9;">
-        <span class="label">Location</span><br>
-        <span class="value" id="print-loc" style="font-size: 14px;"></span>
+
+    <div id="cod_display">
+        <span>COD</span>
     </div>
-    <div class="price-tag">
-        <span style="font-size: 14px; color: #7f8c8d;">TOTAL:</span> $<span id="print-price"></span>
+
+    <div class="premium-box">
+        <span class="label">Location</span>
+        <span class="value" id="print-loc"></span>
     </div>
-    <div class="note-box" id="print-note"></div>
-    <div style="text-align: center; font-size: 10px; margin-top: 5px; color: #888;">~~~ Thank You ~~~</div>
+    
+    <div class="price-container">
+        <div class="price-tag"><span style="font-size: 12px; color: #7f8c8d;">TOTAL:</span> $<span id="print-price"></span></div>
+        <div class="price-riel"><span id="print-riel"></span> ៛</div>
+    </div>
+
+    <div id="print-note" style="border: 1px solid #eee; padding: 8px; font-size: 12px; min-height: 10mm; font-style: italic;"></div>
+    <div style="text-align: center; font-size: 10px; margin-top: 15px; color: #888;">~~~ សូមអរគុណ! (Thank You) ~~~</div>
 </div>
 
 <script>
-    // បំពេញព័ត៌មានដែលអ្នកបានផ្ដល់ឱ្យរួចជាស្រេច
     const TELEGRAM_TOKEN = '8550988878:AAE8pkMzHJ87tbJZClJ4KkA8CfKtZVtPISo'; 
-    const TELEGRAM_CHAT_ID = '557314967'; 
+    const TELEGRAM_CHAT_IDS = ['557314967', '1047599945']; 
+    const RATE = 4000; 
+
+    function khmerToLatin(str) {
+        const khmerNums = ['០', '១', '២', '៣', '៤', '៥', '៦', '７', '៨', '៩'];
+        return str.replace(/[០-៩]/g, function(w) {
+            return khmerNums.indexOf(w);
+        });
+    }
 
     async function sendToTelegram(orderData) {
-        const message = `🔔 *ការបញ្ជាទិញថ្មី (DY CREAM)*\n━━━━━━━━━━━━━━\n🆔 លេខវិក្កយបត្រ: #${orderData.id}\n👤 អ្នកលក់: ${orderData.seller}\n📞 លេខទូរស័ព្ទ: ${orderData.phone}\n📍 ទីតាំង: ${orderData.loc}\n💵 តម្លៃសរុប: $${orderData.price}\n📝 ចំណាំ: ${orderData.note || 'គ្មាន'}\n⏰ ម៉ោង: ${orderData.time} | ${orderData.date}`;
+        const codText = orderData.isCod ? "✅ [COD]" : "❌ [No COD]";
+        // បានបន្ថែម ចំណាំ (Note) ចូលក្នុងសារ Telegram
+        const message = `🔔 *ការបញ្ជាទិញថ្មី (DY CREAM)*\n━━━━━━━━━━━━━━\n🆔 វិក្កយបត្រ: #${orderData.id}\n👤 អ្នកលក់: ${orderData.seller}\n📞 ទូរស័ព្ទ: ${orderData.phone}\n📦 ស្ថានភាព: ${codText}\n📍 ទីតាំង: ${orderData.loc || 'មិនមាន'}\n💵 តម្លៃ: $${orderData.price} (${(orderData.price * RATE).toLocaleString()}៛)\n📝 ចំណាំ: ${orderData.note || '---'}\n⏰ ${orderData.date} | ${orderData.time}`;
         
-        try {
-            await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: message,
-                    parse_mode: 'Markdown'
-                })
-            });
-        } catch (e) {
-            console.error("Telegram Error:", e);
+        for (const chatId of TELEGRAM_CHAT_IDS) {
+            try {
+                await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: chatId, text: message, parse_mode: 'Markdown' })
+                });
+            } catch (e) { console.error(e); }
         }
     }
 
     function exportIndividualExcel(sellerName) {
         const allOrders = JSON.parse(localStorage.getItem('dy_orders')) || [];
         const filteredData = allOrders.filter(o => o.seller === sellerName);
-        if (filteredData.length === 0) return alert("No data for " + sellerName);
+        if (filteredData.length === 0) return alert("មិនមានទិន្នន័យ");
 
-        let total = 0;
-        let table = `<table border="1"><tr style="background:#27ae60;color:white;"><th>Date</th><th>Time</th><th>ID</th><th>Phone</th><th>Loc</th><th>Price</th></tr>`;
-        
+        let table = `<table border="1"><tr><th>Date</th><th>ID</th><th>Phone</th><th>Location</th><th>Note</th><th>Price ($)</th></tr>`;
         filteredData.forEach(o => {
-            const p = parseFloat(o.price) || 0; total += p;
-            table += `<tr><td>${o.date}</td><td>${o.time}</td><td>${o.id}</td><td>${o.phone}</td><td>${o.loc}</td><td>${p}</td></tr>`;
+            table += `<tr><td>${o.date}</td><td>${o.id}</td><td>'${o.phone}</td><td>${o.loc}</td><td>${o.note}</td><td>$${o.price}</td></tr>`;
         });
-        
-        table += `<tr style="background:#eee;"><td colspan="5" align="right">TOTAL:</td><td>$${total.toFixed(2)}</td></tr></table>`;
-        
-        // ជួសជុលអក្សរខ្មែរឱ្យបង្ហាញត្រឹមត្រូវក្នុង Excel
+        table += `</table>`;
         const blob = new Blob(["\ufeff", table], { type: "application/vnd.ms-excel;charset=utf-8" });
         const a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
@@ -141,40 +169,56 @@
     }
 
     function oneClickPrint() {
-        const phone = document.getElementById('phone').value;
+        const phone = khmerToLatin(document.getElementById('phone').value);
+        const priceRaw = khmerToLatin(document.getElementById('price').value);
+        const loc = document.getElementById('loc').value;
+        const note = document.getElementById('note').value;
         const seller = document.querySelector('input[name="seller"]:checked').value;
-        if(!phone) return alert("សូមបញ្ចូលលេខទូរស័ព្ទ!");
+        const isCod = document.getElementById('cod_check').checked;
 
+        if(!phone || !priceRaw) return alert("សូមបំពេញលេខទូរស័ព្ទ និងតម្លៃ!");
+
+        const priceNum = parseFloat(priceRaw) || 0;
         const now = new Date();
         const orderData = {
-            id: 'DY' + Math.floor(Math.random() * 9999),
+            id: 'DY' + Math.floor(1000 + Math.random() * 9000),
             seller: seller,
             phone: phone,
-            loc: document.getElementById('loc').value,
-            price: document.getElementById('price').value,
-            note: document.getElementById('note').value,
-            date: now.toLocaleDateString(),
-            time: now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0')
+            isCod: isCod,
+            loc: loc,
+            price: priceNum.toFixed(2),
+            note: note,
+            date: now.toLocaleDateString('en-GB'),
+            time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })
         };
 
+        // Save to storage for Excel
         let orders = JSON.parse(localStorage.getItem('dy_orders')) || [];
         orders.push(orderData);
         localStorage.setItem('dy_orders', JSON.stringify(orders));
 
-        // ផ្ញើទៅ Telegram ភ្លាមៗ
-        sendToTelegram(orderData);
-
+        // Update Receipt
         document.getElementById('r-id').innerText = 'INV: #' + orderData.id;
         document.getElementById('r-date').innerText = 'DATE: ' + orderData.date;
         document.getElementById('r-time').innerText = 'TIME: ' + orderData.time;
         document.getElementById('r-seller').innerText = 'SELLER: ' + orderData.seller;
         document.getElementById('print-phone').innerText = orderData.phone;
-        document.getElementById('print-loc').innerText = orderData.loc;
+        document.getElementById('print-loc').innerText = orderData.loc || '---';
         document.getElementById('print-price').innerText = orderData.price;
-        document.getElementById('print-note').innerText = orderData.note;
+        document.getElementById('print-riel').innerText = (priceNum * RATE).toLocaleString();
+        document.getElementById('print-note').innerText = orderData.note || '---';
+        document.getElementById('cod_display').style.display = isCod ? 'block' : 'none';
 
-        document.getElementById('receipt').style.display = 'block';
-        setTimeout(() => { window.print(); }, 200);
+        sendToTelegram(orderData);
+        window.print();
+
+        setTimeout(() => {
+            document.getElementById('phone').value = '';
+            document.getElementById('loc').value = '';
+            document.getElementById('price').value = '';
+            document.getElementById('note').value = '';
+            document.getElementById('cod_check').checked = false;
+        }, 1500);
     }
 </script>
 </body>
